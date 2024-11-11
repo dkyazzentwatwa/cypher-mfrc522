@@ -72,7 +72,6 @@ The code is under active development, with regular updates planned to enhance fu
 <img src="img/device2.JPG" alt="RFID/NFC Module" width="500" height="600">
 <img src="img/device3.JPG" alt="RFID/NFC Module" width="500" height="600">
 <img src="img/device4.JPG" alt="RFID/NFC Module" width="500" height="600">
-<img src="img/device5.JPG" alt="RFID/NFC Module" width="500" height="600">
 <img src="img/device6.JPG" alt="RFID/NFC Module" width="500" height="600">
 <img src="img/device7.JPG" alt="RFID/NFC Module" width="500" height="600">
 <img src="img/device8.JPG" alt="RFID/NFC Module" width="500" height="600">
