@@ -200,12 +200,49 @@ void handleReadCard() {
 }
 
 void handleReadBlock() {
-  byte blockAddr = 4;  // Default block to read
+  int blockAddr = 0;
+
+  // Block selection UI
+  while (true) {
+    displayInfo("Select Block", "Block: " + String(blockAddr),
+                "UP/DOWN to change", "SELECT to confirm");
+
+    if (digitalRead(BUTTON_UP) == LOW) {
+      if (millis() - lastDebounceTime > debounceDelay) {
+        lastDebounceTime = millis();
+        blockAddr = (blockAddr + 1) % 64;
+      }
+    }
+
+    if (digitalRead(BUTTON_DOWN) == LOW) {
+      if (millis() - lastDebounceTime > debounceDelay) {
+        lastDebounceTime = millis();
+        blockAddr = (blockAddr - 1 + 64) % 64;
+      }
+    }
+
+    if (digitalRead(BUTTON_SELECT) == LOW) {
+      if (millis() - lastDebounceTime > debounceDelay) {
+        lastDebounceTime = millis();
+        break;
+      }
+    }
+  }
+
+  while (digitalRead(BUTTON_SELECT) == LOW) {
+    delay(10);
+  }
+
+  if (blockAddr < 0 || blockAddr > 63) {
+    displayInfo("Error", "Invalid block", String(blockAddr));
+    delay(2000);
+    return;
+  }
 
   while (true) {
-    displayInfo("Read Block", "Place card and", "press UP to read", "SELECT to exit");
+    displayInfo("Read Block", "Block " + String(blockAddr),
+                "UP to read", "SELECT to exit");
 
-    // Check for exit condition
     if (digitalRead(BUTTON_SELECT) == LOW) {
       if (millis() - lastDebounceTime > debounceDelay) {
         lastDebounceTime = millis();
@@ -213,7 +250,6 @@ void handleReadBlock() {
       }
     }
 
-    // Check for read trigger
     if (digitalRead(BUTTON_UP) == LOW) {
       if (millis() - lastDebounceTime > debounceDelay) {
         lastDebounceTime = millis();
@@ -241,11 +277,11 @@ void handleReadBlock() {
     }
   }
 
-  // Wait for button release
   while (digitalRead(BUTTON_SELECT) == LOW) {
     delay(10);
   }
 }
+
 void handleButtons() {
   if (millis() - lastDebounceTime < debounceDelay) {
     return;
