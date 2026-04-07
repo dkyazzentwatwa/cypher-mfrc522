@@ -9,6 +9,26 @@ ESP32-C3-based MFRC522 tool focused on MIFARE Classic inspection, authenticated 
 - Added SD-backed dump files, reader diagnostics, and key management scaffolding.
 - Normalized the board config to remove the old MFRC522 reset / SD conflict.
 
+## Gallery
+
+<table>
+  <tr>
+    <td><img src="img/device1.JPG" alt="Device photo 1" width="320"></td>
+    <td><img src="img/device2.JPG" alt="Device photo 2" width="320"></td>
+    <td><img src="img/device3.JPG" alt="Device photo 3" width="320"></td>
+  </tr>
+  <tr>
+    <td><img src="img/device4.JPG" alt="Device photo 4" width="320"></td>
+    <td><img src="img/device5.JPG" alt="Device photo 5" width="320"></td>
+    <td><img src="img/device6.JPG" alt="Device photo 6" width="320"></td>
+  </tr>
+  <tr>
+    <td><img src="img/device7.JPG" alt="Device photo 7" width="320"></td>
+    <td><img src="img/device8.JPG" alt="Device photo 8" width="320"></td>
+    <td></td>
+  </tr>
+</table>
+
 ## New Features
 
 | Feature | How to access |
