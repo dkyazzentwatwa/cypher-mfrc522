@@ -1,6 +1,6 @@
 # CYPHER MFRC522
 
-ESP32-C3-based MFRC522 tool focused on MIFARE Classic inspection, authenticated read/write, SD-backed dumps, and explicit magic-card workflows.
+XIAO ESP32C3-based MFRC522 tool focused on MIFARE Classic inspection, authenticated read/write, SD-backed dumps, and explicit magic-card workflows.
 
 ## What Changed
 
@@ -55,7 +55,7 @@ ESP32-C3-based MFRC522 tool focused on MIFARE Classic inspection, authenticated 
 
 ## Build
 
-The sketch is intended for the ESP32-C3 SuperMini class of boards.
+In Arduino IDE select `Tools > Board > ESP32 Arduino > XIAO_ESP32C3`.
 
 Dependencies:
 - `MFRC522`
@@ -66,17 +66,17 @@ Dependencies:
 
 | Signal | GPIO |
 | --- | --- |
-| MFRC522 RST | 21 |
-| MFRC522 SS | 7 |
-| SPI SCK | 4 |
-| SPI MISO | 5 |
-| SPI MOSI | 6 |
-| OLED SDA | 8 |
-| OLED SCL | 9 |
-| SD CS | 10 |
-| Button Up | 3 |
-| Button Down | 1 |
-| Button Select | 2 |
+| MFRC522 RST | 21 / D6 |
+| MFRC522 SS | 20 / D7 |
+| SPI SCK | 8 / D8 |
+| SPI MISO | 9 / D9 |
+| SPI MOSI | 10 / D10 |
+| OLED SDA | 6 / D4 |
+| OLED SCL | 7 / D5 |
+| SD CS | 2 / D0 |
+| Button Up | 3 / D1 |
+| Button Down | 4 / D2 |
+| Button Select | 5 / D3 |
 
 ## Serial Commands
 
@@ -101,3 +101,4 @@ magic set-uid DE AD BE EF
 - Dumps are human-readable text files on the SD card.
 - The default key set includes the most common MIFARE Classic defaults.
 - The firmware now fails loudly on unsupported card families instead of pretending a transaction succeeded.
+- On XIAO ESP32C3, D0 and D9 are boot-related pins; if you see boot issues, move SD CS off D0 and keep D9 only on the SPI bus.
