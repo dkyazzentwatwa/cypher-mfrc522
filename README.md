@@ -1,80 +1,83 @@
 # CYPHER MFRC522
-## A tiny ESP32 device that interacts with RFID devices using the MFRC522 chip.
-<img src="img/device1.JPG" alt="RFID/NFC Module" width="500" height="600">
 
-- This project leverages the ESP32-C3 Super Mini microcontroller, featuring a robust setup with an SSD1306 128x64 OLED screen, an SD card module, three input buttons, and a MFRC522 RFID module.
-- The schematics and PCB files are available for you to create yourself!
-- Get $5 for new users when you make it at PCBWay! https://pcbway.com/g/87Pi52 
+ESP32-C3-based MFRC522 tool focused on MIFARE Classic inspection, authenticated read/write, SD-backed dumps, and explicit magic-card workflows.
 
-## Current Features
+## What Changed
 
-- **RFID Functionality**: Read UUID, NDEF messges, erase, and write data using the MFC522 module.
-- **User Interface**: Navigate options with three buttons connected to the OLED screen.
+- Reworked the sketch into a non-blocking app with a real OLED menu and a serial command surface.
+- Added authenticated Classic-sector read/write helpers and a safer dump/restore workflow.
+- Added SD-backed dump files, reader diagnostics, and key management scaffolding.
+- Normalized the board config to remove the old MFRC522 reset / SD conflict.
 
-## Future Features
-- **SD Card Operations**: Seamlessly read, load, and delete files on the SD card.
-- **Improve menu flow and button handling***
-- **Save scans to SD card** : After reading RFID/NFC, save data to SD Card
-- **Write from SD card** : Enter write menu, select SD Card, & choose which data to write. 
+## New Features
 
+| Feature | How to access |
+| --- | --- |
+| Card inspection | OLED menu: `Inspect card` or serial: `inspect` |
+| UID display | Shown automatically during card inspection |
+| Card family detection | Shown in `Inspect card` and `reader info` |
+| Authenticated block read | OLED menu: `Read block` or serial: `read-block <n>` |
+| Authenticated block write | Serial: `write-block <n> <16 hex bytes>` |
+| SD dump save | OLED menu: `Save dump` or serial: `dump save [name]` |
+| SD dump restore | OLED menu: `Restore dump` or serial: `dump load <file>` |
+| Reader diagnostics | OLED menu: `Diagnostics` or serial: `reader info` / `reader selftest` |
+| Key management | Serial: `keys list`, `keys select <index>` |
+| Magic-card UID tools | Serial: `magic set-uid <4\|7\|10 hex bytes>` |
+| Non-blocking UI | Built into the new menu flow |
+| Classic-only gating | Automatic; unsupported cards are rejected clearly |
 
-More updates will be added soon!
+## Important Limits
 
-## Parts List
+- This project is MFRC522-first. It is not a universal NFC stack.
+- MIFARE Classic is the primary supported family.
+- Ultralight/NTAG/DESFire are not treated as full-featured targets.
+- Magic-card UID/backdoor features only work on compatible cards.
 
-| Component                     | Description                                      |
-|-------------------------------|--------------------------------------------------|
-| **ESP32-C3 Super Mini**       | Microcontroller with Wi-Fi and Bluetooth support |
-| **SSD1306 128x64 OLED Display** | .96-inch screen for displaying information      |
-| **SD Card Module**            | Module for reading and writing SD cards         |
-| **MFRC522 RFID Module**     | Module for RFID reading and writing         |
-| **Push Buttons**              | 3 buttons for user interaction                   |
-| **Resistors**                 | 10kΩ resistors for buttons (optional)         |
-| **Breadboard**                | For prototyping connections                       |
-| **Jumper Wires**              | For making connections between components        |
-| **3V Power Supply**              | Suitable power source for the ESP32             |
+## Build
 
-## Parts used to make this device:
-- **ESP32-C3 Super Mini**:
-https://amzn.to/3XtgL9G
+The sketch is intended for the ESP32-C3 SuperMini class of boards.
 
-- **MFC522 RFID Module**:
-https://amzn.to/3UHbpXS
+Dependencies:
+- `MFRC522`
+- `Adafruit GFX Library`
+- `Adafruit SSD1306`
 
-- **SSD1306 128x64 Screen**:
-https://amzn.to/3TqELJe
+## Pin Map
 
-- **SD Card Module**:
-https://amzn.to/3zsvJot
+| Signal | GPIO |
+| --- | --- |
+| MFRC522 RST | 21 |
+| MFRC522 SS | 7 |
+| SPI SCK | 4 |
+| SPI MISO | 5 |
+| SPI MOSI | 6 |
+| OLED SDA | 8 |
+| OLED SCL | 9 |
+| SD CS | 10 |
+| Button Up | 3 |
+| Button Down | 1 |
+| Button Select | 2 |
 
-- **Tactile Buttons**:
-https://amzn.to/4gripRD
+## Serial Commands
 
-## Wiring
+Examples:
 
-### SD Card Module
+```text
+help
+reader info
+reader selftest
+inspect
+read-block 4
+write-block 4 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10
+dump save
+dump load dump_DEADBEEF_123456.dump
+keys list
+keys select 0
+magic set-uid DE AD BE EF
+```
 
-- **CS**: Pin 10
-- **MOSI**: Pin 6
-- **MISO**: Pin 5
-- **SCK**: Pin 4
+## Notes
 
-### Buttons
-
-- **Up**: Pin 3
-- **Down**: Pin 1
-- **Select**: Pin 2
-
-## Development and Updates
-
-The code is under active development, with regular updates planned to enhance functionality and stability. Keep an eye on this repository for the latest improvements and feature additions.
-
-<img src="img/device2.JPG" alt="RFID/NFC Module" width="500" height="600">
-<img src="img/device3.JPG" alt="RFID/NFC Module" width="500" height="600">
-<img src="img/device4.JPG" alt="RFID/NFC Module" width="500" height="600">
-<img src="img/device6.JPG" alt="RFID/NFC Module" width="500" height="600">
-<img src="img/device7.JPG" alt="RFID/NFC Module" width="500" height="600">
-<img src="img/device8.JPG" alt="RFID/NFC Module" width="500" height="600">
-
-
-
+- Dumps are human-readable text files on the SD card.
+- The default key set includes the most common MIFARE Classic defaults.
+- The firmware now fails loudly on unsupported card families instead of pretending a transaction succeeded.
